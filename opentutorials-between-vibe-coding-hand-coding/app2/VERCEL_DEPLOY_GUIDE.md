@@ -56,7 +56,7 @@ vercel login
 ### 1) 프로젝트 디렉토리로 이동
 배포할 HTML 파일이 있는 디렉토리로 이동합니다:
 ```bash
-cd /Users/chuyumin/Documents/생활코딩/opentutorials-between-vibe-coding-hand-coding/app2
+cd /Users/chuyumin/Documents/생활코딩/opentutorials/opentutorials-between-vibe-coding-hand-coding/app2
 ```
 
 ### 2) Vercel 초기 배포 명령어 실행
