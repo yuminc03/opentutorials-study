@@ -1,0 +1,148 @@
+/* ---------- 디자인 토큰 (라이트 모드 기본값) ---------- */
+:root {
+  color-scheme: light dark;
+
+  --bg: #eef1f7;
+  --surface: #ffffff;
+  --border: #d5dbe6;
+  --text: #101720;
+  --text-muted: #4a5768;
+  --accent: #1d4ed8;
+  --accent-hover: #1a3fb0;
+  --accent-fg: #ffffff;
+  --shadow: 0 12px 32px rgba(16, 23, 32, 0.1);
+}
+
+/* 다크 모드에서도 대비(contrast)를 유지하도록 토큰만 교체 */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0e131a;
+    --surface: #19202a;
+    --border: #2e3846;
+    --text: #f3f6fa;
+    --text-muted: #a7b3c2;
+    --accent: #7cb2ff;
+    --accent-hover: #a3c9ff;
+    --accent-fg: #0e131a;
+    --shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family:
+    var(--font-geist-sans),
+    system-ui,
+    -apple-system,
+    sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- 카운터 카드 ---------- */
+.counter-card {
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 40px 32px;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--accent);
+  /* 밑줄을 글자에서 떨어뜨려 글자 획을 가리지 않게 한다. */
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 8px;
+}
+
+/* ---------- 카운트 숫자 ---------- */
+.counter-value {
+  /* 화면 폭에 따라 3rem ~ 6rem 사이로 자동 조절 */
+  font-size: clamp(3rem, 20vw, 6rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--text);
+  /* 숫자 폭을 고정해 값이 바뀌어도 레이아웃이 흔들리지 않게 한다. */
+  font-variant-numeric: tabular-nums;
+}
+
+.counter-label {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ---------- 증가 버튼 ---------- */
+.counter-button {
+  width: 80px;
+  height: 80px;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--accent);
+  color: var(--accent-fg);
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    transform 0.1s ease;
+}
+
+.counter-button:hover:not(:disabled) {
+  background-color: var(--accent-hover);
+}
+
+.counter-button:active:not(:disabled) {
+  transform: scale(0.94);
+}
+
+/* 키보드 포커스 위치를 뚜렷하게 표시한다. */
+.counter-button:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.counter-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* 모션 최소화 설정을 존중한다. */
+@media (prefers-reduced-motion: reduce) {
+  .counter-button {
+    transition: none;
+  }
+
+  .counter-button:active:not(:disabled) {
+    transform: none;
+  }
+}
