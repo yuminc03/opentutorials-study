@@ -2,12 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { createGateway, streamText } from "ai";
-
-const AI_GATEWAY_API_KEY =
-  process.env.NEXT_PUBLIC_AI_GATEWAY_API_KEY || "";
-
-const gateway = createGateway({ apiKey: AI_GATEWAY_API_KEY });
 
 export default function Home() {
   const [count, setCount] = useState<number>(0);
@@ -15,20 +9,25 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const fetchEvent = async (year: number) => {
-    if (!AI_GATEWAY_API_KEY) {
-      setYearEvent("AI Gateway API Key가 설정되지 않았습니다 (.env.local의 NEXT_PUBLIC_AI_GATEWAY_API_KEY 확인).");
-      return;
-    }
     setYearEvent("");
     setIsLoading(true);
     try {
-      const { textStream } = streamText({
-        model: gateway("openai/gpt-4o-mini"),
-        prompt: `${year}년에 있었던 중요한 사건`,
+      const res = await fetch("/api/event", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ year }),
       });
 
-      for await (const chunk of textStream) {
-        setYearEvent((prev) => prev + chunk);
+      if (!res.ok) {
+        throw new Error(`Server returned ${res.status}`);
+      }
+
+      const reader = res.body?.getReader();
+      const decoder = new TextDecoder();
+      while (reader) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        setYearEvent((prev) => prev + decoder.decode(value));
       }
     } catch (error) {
       console.error("Error streaming event:", error);
@@ -97,4 +96,5 @@ export default function Home() {
     </div>
   );
 }
+
 
