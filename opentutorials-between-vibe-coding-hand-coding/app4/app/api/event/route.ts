@@ -1,13 +1,17 @@
 import { createGateway, streamText } from "ai";
 
-const gateway = createGateway({
-  apiKey:
-    process.env.AI_GATEWAY_API_KEY ||
-    process.env.NEXT_PUBLIC_AI_GATEWAY_API_KEY,
-});
-
+// NEXT_PUBLIC_ 접두사가 붙은 변수는 클라이언트 번들에 인라인되므로 사용하지 않는다.
+const gateway = createGateway({ apiKey: process.env.AI_GATEWAY_API_KEY });
 
 export async function POST(req: Request) {
+  if (!process.env.AI_GATEWAY_API_KEY) {
+    console.error("AI_GATEWAY_API_KEY가 설정되지 않았습니다.");
+    return Response.json(
+      { error: "AI Gateway API Key가 설정되지 않았습니다." },
+      { status: 500 },
+    );
+  }
+
   try {
     const { year } = await req.json();
     const result = streamText({
@@ -17,9 +21,9 @@ export async function POST(req: Request) {
     return result.toTextStreamResponse();
   } catch (error) {
     console.error("Error in /api/event:", error);
-    return new Response(JSON.stringify({ error: "Failed to generate event stream" }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    return Response.json(
+      { error: "Failed to generate event stream" },
+      { status: 500 },
+    );
   }
 }
